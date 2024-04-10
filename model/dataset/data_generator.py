@@ -1,11 +1,13 @@
 import os
 import random
 from trdg.generators import GeneratorFromStrings
+import csv
 
 current_dir = os.path.dirname(__file__)
 fonts_dir = os.path.join(current_dir, "fonts/ko")
 txt_file_path = os.path.join(current_dir, "dicts/ks1001.txt")
 output_dir = os.path.join(current_dir, "train_images")
+csv_file_path = os.path.join(output_dir, "image_font_mapping.csv")
 
 font_paths = [os.path.join(fonts_dir, file) for file in os.listdir(fonts_dir) if file.endswith(".ttf")]
 
@@ -22,7 +24,10 @@ for font_dir in font_dirs:
     
 print(font_dirs)
 
+# CSV 파일에 저장할 데이터 준비
+data = [("index", "imageName", "fontName")]
 counter = 1  # 이미지 번호 카운터
+
 for word in content_list:
     # 단어에서 랜덤으로 한 글자 선택
     random_char = random.choice(word)
@@ -45,5 +50,11 @@ for word in content_list:
     output_file_name = f"{random_char}_{font_name}_img{counter}.png"
     output_file_path = os.path.join(output_font_dir, output_file_name)
     generated_image.save(output_file_path)
+    data.append((counter, output_file_name, font_name))
+
     counter += 1  # 이미지 번호 증가
 
+# CSV 파일 작성
+with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
+    writer = csv.writer(file)
+    writer.writerows(data)
