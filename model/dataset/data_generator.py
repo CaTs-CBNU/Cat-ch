@@ -2,17 +2,16 @@ import os
 import random
 from trdg.generators import GeneratorFromStrings
 
-# 입력 파일 경로
-txt_file_path = "model/dataset/dicts/ks1001.txt"
-fonts_dir = "model/dataset/ko"
+current_dir = os.path.dirname(__file__)
+fonts_dir = os.path.join(current_dir, "fonts/ko")
+txt_file_path = os.path.join(current_dir, "dicts/ks1001.txt")
+output_dir = os.path.join(current_dir, "train_images")
 
 font_paths = [os.path.join(fonts_dir, file) for file in os.listdir(fonts_dir) if file.endswith(".ttf")]
 
 with open(txt_file_path, 'r', encoding='utf-8') as file:
     content = file.read()
 content_list = content.split()
-
-output_dir = "model/dataset/train_datasets"
 
 os.makedirs(output_dir, exist_ok=True)
 
