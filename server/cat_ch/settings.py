@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ["0.0.0.0"]
 # Application definition
 
 INSTALLED_APPS = [
+    'fcm.apps.FcmConfig',
     'fileHosting.apps.FilehostingConfig',
     'userInfo.apps.UserinfoConfig',
     'rest_framework',
@@ -146,3 +147,5 @@ REST_FRAMEWORK = {
 MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+FIREBASE_CREDENTIALS_PATH = ''

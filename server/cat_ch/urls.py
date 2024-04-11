@@ -21,7 +21,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('userinfo/',  include('userInfo.urls')),
     path('filehosting/',  include('fileHosting.urls')),
+    path('fcm/',  include('fcm.urls')),
 ]
+
 
 from django.conf.urls.static import static
 from . import settings
