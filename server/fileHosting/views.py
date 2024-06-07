@@ -9,6 +9,7 @@ from . import serializers, models
 class FileViewSet(ViewSet):
     model = models.File
     serializers = serializers.FileSerializer
+    # permission_classes = [permissions.IsAuthenticated]
     
     def create(self, request):
         serializer = self.serializers(data = request.data)

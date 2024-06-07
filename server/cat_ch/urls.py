@@ -22,6 +22,7 @@ urlpatterns = [
     path('userinfo/',  include('userInfo.urls')),
     path('filehosting/',  include('fileHosting.urls')),
     path('fcm/',  include('fcm.urls')),
+    path('font/',  include('fontGenerator.urls')),
 ]
 
 
