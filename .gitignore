@@ -1,0 +1,6 @@
+**/.DS_Store
+/server/serviceAccountKey.json
+*.pth
+*__pycache__/*
+*/data_example/*
+*.pyc
