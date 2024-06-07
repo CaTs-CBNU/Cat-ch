@@ -1,24 +1,28 @@
 package com.cbnu.cats.ui.spen
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PointF
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.BitmapDrawable
-import android.util.AttributeSet
+import android.os.Environment
 import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.SeekBar
+import com.cbnu.cats.R
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.Stack
 import kotlin.math.abs
 
@@ -47,6 +51,7 @@ class SPenCanvas(context: Context) : View(context) {
 
     private val prevStack = Stack<Bitmap>()
     private val nextStack = Stack<Bitmap>()
+    private var drawMode = true
 
     // 드로잉 펜 설정
     private val strokePaint = Paint().apply {
@@ -61,8 +66,8 @@ class SPenCanvas(context: Context) : View(context) {
     // 지우개 모드일 때 지워지는 영역을 표시하기 위한 설정
     private val eraserCirclePaint = Paint().apply {
         isAntiAlias = true
-        style = Paint.Style.STROKE
-        color = Color.BLACK
+        style = Paint.Style.FILL
+//        color = Color.BLACK
         strokeWidth = convertDpToPixel(1F)
     }
 
@@ -90,29 +95,36 @@ class SPenCanvas(context: Context) : View(context) {
 
         canvasWidth = w
         canvasHeight = h
+//        // Load the image from resources
+//        val resources = context.resources
+//        val originalBitmap = BitmapFactory.decodeResource(resources, R.drawable.output)
+//
+//        // Calculate the scaling factors to fit the image to the canvas
+//        val scaleX = canvasWidth.toFloat() / originalBitmap.width
+//        val scaleY = canvasHeight.toFloat() / originalBitmap.height
+//
+//        // Create a Matrix to apply the scaling factors
+//        val matrix = Matrix().apply {
+//            postScale(scaleX, scaleY)
+//        }
+//        // Create a scaled Bitmap with the new dimensions
+//        val scaledBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, matrix, true)
 
-        scribeCanvasBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.ARGB_8888)
-
+        // Create a Bitmap object with the desired size
+        scribeCanvasBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.RGB_565)
+        // Create a Canvas object with the Bitmap
         scribeCanvasBitmap?.let {
             scribeCanvas = Canvas(it)
         }
+
+        // Draw the scaled image on the Canvas
+//        scribeCanvas.drawBitmap(scaledBitmap, 0f, 0f, null)
     }
 
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
-        // Draw the grid
-//        val gridPaint = Paint().apply {
-//            color = Color.LTGRAY
-//            strokeWidth = 1f
-//        }
-//        val gridSize = 50 // Change this to the size you want for your grid
-//        for (i in 0 until canvasHeight step gridSize) {
-//            canvas.drawLine(0f, i.toFloat(), canvasWidth.toFloat(), i.toFloat(), gridPaint)
-//        }
-
-
         // 그린 path 를 비트맵 객체에 중간 저장, 다시 캔버스에 그리는 부분이라고 보면 된다.
         scribeCanvasBitmap?.let { canvas.drawBitmap(it, 0F, 0F, strokePaint) }
-
         canvas.drawPath(strokePath, if (isErasing) eraserPaint else strokePaint)
 
         if (isErasing && isMoving) {
@@ -260,15 +272,62 @@ class SPenCanvas(context: Context) : View(context) {
             invalidate()
         }
     }
-    fun changeBackgroundColor(color: Int) {
-        eraserPaint.color = color
-        setBackgroundColor(color)
-    }
+//    fun changeBackgroundColor(color: Int) {
+//        eraserPaint.color = color
+//        setBackgroundColor(color)
+//    }
 
-    fun changeBackgroundImage(bitmap: Bitmap) {
-        // Scale the bitmap to match the size of the canvas
-        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, canvasWidth, canvasHeight, true)
-        val bitmapDrawable = BitmapDrawable(resources, scaledBitmap)
-        background = bitmapDrawable
+    fun changeBackgroundImage(resourceId: Int) {
+        // Load the image from resources
+        val resources = context.resources
+        val originalBitmap = BitmapFactory.decodeResource(resources, resourceId)
+
+        if (originalBitmap != null) {
+            // Calculate the scaling factors to fit the image to the canvas
+            val scaleX = canvasWidth.toFloat() / originalBitmap.width
+            val scaleY = canvasHeight.toFloat() / originalBitmap.height
+
+            // Create a Matrix to apply the scaling factors
+            val matrix = Matrix().apply {
+                postScale(scaleX, scaleY)
+            }
+            // Create a scaled Bitmap with the new dimensions
+            val scaledBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, matrix, true)
+
+            // Create a Bitmap object with the desired size
+            scribeCanvasBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.ARGB_8888)
+            // Create a Canvas object with the Bitmap
+            scribeCanvasBitmap?.let {
+                scribeCanvas = Canvas(it)
+            }
+
+            // Draw the scaled image on the Canvas
+            scribeCanvas?.drawBitmap(scaledBitmap, 0f, 0f, null)
+
+            // Set the new background image
+//            background = scaledBitmap
+            invalidate()
+        } else {
+            // Handle null bitmap (optional)
+            android.util.Log.e("SPenCanvas", "Failed to decode resource: $resourceId")
+        }
+    }
+    // 비트맵을 PNG 파일로 저장하는 함수
+//    fun saveBitmapToFile(bitmap: Bitmap, format: Bitmap.CompressFormat, filename: String): File? {
+//        val directory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+//        val file = File(directory, filename)
+//        var fos: FileOutputStream? = null
+//        try {
+//            fos = FileOutputStream(file)
+//            bitmap.compress(format, 100, fos)
+//            fos.close()
+//        } catch (e: IOException) {
+//            e.printStackTrace()
+//            return null
+//        }
+//        return file
+//    }
+    fun setEraser() {
+        drawMode = false
     }
 }
