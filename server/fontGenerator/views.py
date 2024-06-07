@@ -17,7 +17,7 @@ class FontGeneratorViewSet(ViewSet):
         except Exception as e:
             print("ERROR:", e)
             return JsonResponse({"ERROR": str(e)})
-        
+
     def font_generator(self, text, font):
         font_path = os.path.join(BASE_DIR, "fontGenerator/fonts/ko/", font + '.ttf')
         train_img_path = os.path.join(BASE_DIR, "fontGenerator/train_images/", font)
