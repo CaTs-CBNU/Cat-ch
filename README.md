@@ -26,6 +26,7 @@
 
 ### 모델
 > Few-shot Font Generation with Multiple Localized Experts
+- MX-Font (Park, Song, et al. ICCV 2021) [[pdf]](https://arxiv.org/abs/2104.00887) [[github]](https://github.com/clovaai/mxfont): generating fonts by employing multiple experts where each expert focuses on different local concepts.
 
 ### 동작 화면
 
