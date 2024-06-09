@@ -27,3 +27,13 @@
 ---
 ### 동작 화면
 
+## 팀 멤버
+
+| 이름      | 역할        | GitHub                                                   |
+|-----------|-------------|----------------------------------------------------------|
+| 김태완    | 프로젝트 매니저 | [GitHub 프로필](https://github.com/kimtaewan22)              |
+| 이석호    | 백엔드   | [GitHub 프로필](https://github.com/LLagoon3)              |
+| 권경원    | 프론트엔드  | [GitHub 프로필](https://github.com/Nikellodian
+)              |
+| 윤경민    | 인공지능 | [GitHub 프로필](https://github.com/YoonTree
+)              |
