@@ -1,0 +1,18 @@
+version: '3'
+services:
+  django:
+    container_name: cat_ch_django
+    build:
+      context: ./
+      dockerfile: Dockerfile_django
+    volumes:
+      - ./:/cat_ch
+    command: 
+      - bash
+      - -c
+      - |
+        cd /cat_ch &&
+        pip install -r ./requirements.txt &&
+        tail -f /dev/null
+    ports: 
+      - "8003:8000"
