@@ -4,13 +4,14 @@ import numpy as np
 from matplotlib import font_manager as fm
 from matplotlib.patheffects import withStroke
 
-def draw_grid_image(chars, output_filename):
+def draw_grid_image(chars, output_filename, font_path):
     """
         한글 자음체계를 격자에 표시하는 이미지 생성
 
         Parameters:
             chars (list of str): 격자에 배치할 한글 자음 리스트
             output_filename (str): 생성할 이미지 파일 이름
+            font_path (str): 폰트 파일 경로
 
         Returns:
             None
@@ -38,7 +39,7 @@ def draw_grid_image(chars, output_filename):
         ax.axvline(x=i, color='black', linewidth=0.5)  # 세로 격자 라인 그리기
 
     # 폰트 설정을 위해 외부 폰트 파일 로드
-    prop = fm.FontProperties(fname="./fonts/ko/17.ttf") 
+    prop = fm.FontProperties(fname=font_path) 
 
     # 텍스트를 격자에 추가하기
     text_index = 0
@@ -82,12 +83,16 @@ def main():
         'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ',
         'ㅡ', 'ㅢ', 'ㅣ'
     ]
-
+    
+    # 폰트 파일 경로
+    font_name = '3'
+    font_path = f"./fonts/ko/{font_name}.ttf"
+    
     # 자음 격자 이미지 생성
-    draw_grid_image(hangul_initials, 'hangul_initials.png')
+    draw_grid_image(hangul_initials, f'hangul_initials_{font_name}.png', font_path)
     
     # 모음 격자 이미지 생성
-    draw_grid_image(hangul_vowels, 'hangul_vowels.png')
+    draw_grid_image(hangul_vowels, f'hangul_vowels_{font_name}.png', font_path)
 
 if __name__ == "__main__":
     main()
