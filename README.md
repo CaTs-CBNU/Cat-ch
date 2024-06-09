@@ -22,9 +22,11 @@
 ![Figma](https://img.shields.io/badge/Figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white) 
 </div>
 
-### 아키텍처
+## 아키텍처
 
----
+### 모델
+> Few-shot Font Generation with Multiple Localized Experts
+
 ### 동작 화면
 
 ## 팀 멤버
@@ -35,3 +37,6 @@
 | 이석호    | 백엔드   | [GitHub 프로필](https://github.com/LLagoon3)              |
 | 권경원    | 프론트엔드  | [GitHub 프로필](https://github.com/Nikellodian)              |
 | 윤경민    | 인공지능 | [GitHub 프로필](https://github.com/YoonTree)              |
+
+
+
